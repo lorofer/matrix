@@ -33,44 +33,53 @@ target_include_directories(${MATRIX_LIB} PRIVATE ${SRC_DIR})
 target_link_libraries(${MATRIX_LIB} PRIVATE m)
 
 
-# check.h dependencies:
-find_package(PkgConfig REQUIRED)
-pkg_check_modules(PC_CHECK REQUIRED check)
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    option(BUILD_TESTS "Build tests" ON)
+else()
+    option(BUILD_TESTS "Build tests" OFF)
+endif()
 
 
-# tests build:
-set(TEST_TARGET tests.out)
-add_executable(${TEST_TARGET} ${TESTS_C})
-target_include_directories(${TEST_TARGET} PRIVATE
-    ${SRC_DIR}
-    ${TESTS_DIR}
-)
-target_link_libraries(${TEST_TARGET}
-    ${MATRIX_LIB}
-    ${PC_CHECK_LIBRARIES}
-)
+if(BUILD_TESTS)
+	# check.h dependencies:
+	find_package(PkgConfig REQUIRED)
+	pkg_check_modules(PC_CHECK REQUIRED check)
 
 
-# tests run:
-add_custom_target(test
-	DEPENDS ${TEST_TARGET}
-	COMMAND ./${TEST_TARGET}
-	COMMENT "Testing... "
-)
+	# tests build:
+	set(TEST_TARGET tests.out)
+	add_executable(${TEST_TARGET} ${TESTS_C})
+	target_include_directories(${TEST_TARGET} PRIVATE
+		${SRC_DIR}
+		${TESTS_DIR}
+	)
+	target_link_libraries(${TEST_TARGET}
+		${MATRIX_LIB}
+		${PC_CHECK_LIBRARIES}
+	)
 
 
-# valgrind run:
-add_custom_target(mem
-	DEPENDS ${TEST_TARGET}
-	COMMAND valgrind
-		--child-silent-after-fork=yes
-		--track-origins=yes
-		--leak-check=full
-		--show-leak-kinds=all
-		--show-error-list=yes
-		./${TEST_TARGET}
-	COMMENT "Memory checking..."
-)
+	# tests run:
+	add_custom_target(test
+		DEPENDS ${TEST_TARGET}
+		COMMAND ./${TEST_TARGET}
+		COMMENT "Testing... "
+	)
+
+
+	# valgrind run:
+	add_custom_target(mem
+		DEPENDS ${TEST_TARGET}
+		COMMAND valgrind
+			--child-silent-after-fork=yes
+			--track-origins=yes
+			--leak-check=full
+			--show-leak-kinds=all
+			--show-error-list=yes
+			./${TEST_TARGET}
+		COMMENT "Memory checking..."
+	)
+endif()
 
 
 # clang-format:
