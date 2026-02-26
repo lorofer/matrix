@@ -14,9 +14,8 @@ START_TEST(matrix_transpose_tcase_1) {
 	matrix_t *result = matrix_transpose(m);
 	ck_assert_ptr_nonnull(result);
 
-	int rows = 0, cols = 0;
-	matrix_get_rows(result, &rows);
-	matrix_get_cols(result, &cols);
+	int rows = matrix_get_rows(result);
+	int cols = matrix_get_cols(result);
 	ck_assert_int_eq(rows, 3);
 	ck_assert_int_eq(cols, 2);
 
@@ -24,9 +23,7 @@ START_TEST(matrix_transpose_tcase_1) {
 
 	for (int i = 0; i < 3; i++) {
 		for (int j = 0; j < 2; j++) {
-			double val = 0;
-			matrix_get_el(result, i, j, &val);
-			ck_assert_double_eq_tol(val, expected[i][j], 1e-7);
+			ck_assert_double_eq_tol(matrix_get_el(result, i, j), expected[i][j], 1e-7);
 		}
 	}
 
@@ -46,18 +43,15 @@ START_TEST(matrix_transpose_tcase_2) {
 	matrix_t *result = matrix_transpose(m);
 	ck_assert_ptr_nonnull(result);
 
-	int rows = 0, cols = 0;
-	matrix_get_rows(result, &rows);
-	matrix_get_cols(result, &cols);
+	int rows = matrix_get_rows(result);
+	int cols = matrix_get_cols(result);
 	ck_assert_int_eq(rows, 4);
 	ck_assert_int_eq(cols, 1);
 
 	double expected[4][1] = {{1.5}, {-2.0}, {3.5}, {0.0}};
 
 	for (int i = 0; i < 4; i++) {
-		double val = 0;
-		matrix_get_el(result, i, 0, &val);
-		ck_assert_double_eq_tol(val, expected[i][0], 1e-7);
+		ck_assert_double_eq_tol(matrix_get_el(result, i, 0), expected[i][0], 1e-7);
 	}
 
 	matrix_free(m);
@@ -83,9 +77,7 @@ START_TEST(matrix_transpose_tcase_3) {
 
 	for (int i = 0; i < 3; i++) {
 		for (int j = 0; j < 3; j++) {
-			double got = 0;
-			matrix_get_el(result, i, j, &got);
-			ck_assert_double_eq_tol(got, expected[i][j], 1e-7);
+			ck_assert_double_eq_tol(matrix_get_el(result, i, j), expected[i][j], 1e-7);
 		}
 	}
 

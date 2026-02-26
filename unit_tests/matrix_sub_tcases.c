@@ -26,9 +26,7 @@ START_TEST(matrix_sub_tcase_1) {
 	};
 	for (int i = 0; i < 3; i++) {
 		for (int j = 0; j < 3; j++) {
-			double val = 0;
-			matrix_get_el(result, i, j, &val);
-			ck_assert_double_eq_tol(val, expected[i][j], 1e-7);
+			ck_assert_double_eq_tol(matrix_get_el(result, i, j), expected[i][j], 1e-7);
 		}
 	}
 
@@ -69,9 +67,7 @@ START_TEST(matrix_sub_tcase_2) {
 	};
 	for (int i = 0; i < 3; i++) {
 		for (int j = 0; j < 2; j++) {
-			double val = 0;
-			matrix_get_el(result, i, j, &val);
-			ck_assert_double_eq_tol(val, expected[i][j], 1e-7);
+			ck_assert_double_eq_tol(matrix_get_el(result, i, j), expected[i][j], 1e-7);
 		}
 	}
 
@@ -97,9 +93,7 @@ START_TEST(matrix_sub_tcase_3) {
 
 	for (int i = 0; i < 3; i++) {
 		for (int j = 0; j < 3; j++) {
-			double val = 0;
-			matrix_get_el(result, i, j, &val);
-			ck_assert_double_eq_tol(val, 0.0000001, 1e-7);
+			ck_assert_double_eq_tol(matrix_get_el(result, i, j), 0.0000001, 1e-7);
 		}
 	}
 
@@ -119,9 +113,7 @@ START_TEST(matrix_sub_tcase_4) {
 	matrix_t *result = matrix_sub(m1, m2);
 	ck_assert_ptr_nonnull(result);
 
-	double val = 0;
-	matrix_get_el(result, 0, 0, &val);
-	ck_assert_double_eq_tol(val, -8.0, 1e-7);
+	ck_assert_double_eq_tol(matrix_get_el(result, 0, 0), -8.0, 1e-7);
 
 	matrix_free(m1);
 	matrix_free(m2);

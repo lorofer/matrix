@@ -3,6 +3,7 @@
 int main() {
 	SRunner *sr = srunner_create(matrix_memory_test_suite());
 	srunner_add_suite(sr, matrix_accessors_test_suite());
+	srunner_add_suite(sr, matrix_get_array_test_suite());
 	srunner_add_suite(sr, matrix_eq_test_suite());
 	srunner_add_suite(sr, matrix_sum_test_suite());
 	srunner_add_suite(sr, matrix_sub_test_suite());
@@ -11,7 +12,6 @@ int main() {
 	srunner_add_suite(sr, matrix_transpose_test_suite());
 	srunner_add_suite(sr, matrix_determinant_test_suite());
 	srunner_add_suite(sr, matrix_calc_complements_test_suite());
-	//   srunner_add_suite(sr, s21_inverse_matrix_test_suite());
 
 	srunner_set_fork_status(sr, CK_NOFORK);
 	srunner_run_all(sr, CK_NORMAL);

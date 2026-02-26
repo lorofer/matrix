@@ -40,9 +40,7 @@ START_TEST(matrix_memory_tcase_4) {
 	matrix_t *m2 = matrix_realloc(m1, 5, 5);
 	for (int i = 0; i < 3; i++) {
 		for (int j = 0; j < 3; j++) {
-			double val = 0;
-			matrix_get_el(m2, i, j, &val);
-			ck_assert_double_eq(val, values[i][j]);
+			ck_assert_double_eq(matrix_get_el(m2, i, j), values[i][j]);
 		}
 	}
 
@@ -66,9 +64,7 @@ START_TEST(matrix_memory_tcase_5) {
 	matrix_t *m2 = matrix_realloc(m1, 2, 2);
 	for (int i = 0; i < 2; i++) {
 		for (int j = 0; j < 2; j++) {
-			double val = 0;
-			matrix_get_el(m2, i, j, &val);
-			ck_assert_double_eq(val, values[i][j]);
+			ck_assert_double_eq(matrix_get_el(m2, i, j), values[i][j]);
 		}
 	}
 

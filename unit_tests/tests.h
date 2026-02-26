@@ -8,6 +8,7 @@
 
 Suite *matrix_memory_test_suite();
 Suite *matrix_accessors_test_suite();
+Suite *matrix_get_array_test_suite();
 Suite *matrix_eq_test_suite();
 Suite *matrix_sum_test_suite();
 Suite *matrix_sub_test_suite();

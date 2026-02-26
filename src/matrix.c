@@ -46,9 +46,7 @@ matrix_t *matrix_realloc(matrix_t *M, int rows, int cols) {
 
 	for (int i = 0; i < min_rows; i++) {
 		for (int j = 0; j < min_cols; j++) {
-			double val = 0;
-			matrix_get_el(M, i, j, &val);
-			matrix_set_el(result, val, i, j);
+			matrix_set_el(result, matrix_get_el(M, i, j), i, j);
 		}
 	}
 
@@ -67,36 +65,44 @@ void matrix_free(matrix_t *M) {
 
 // ------------------
 
-int matrix_set_el(matrix_t *M, double val, int i, int j) {
-	if (_matrix_is_ptr_null(M) || !_matrix_are_coordinates_correct(M, i, j)) {
-		return EXIT_FAILURE;
-	}
+void matrix_set_el(matrix_t *M, double val, int i, int j) {
 	M->array[M->cols * i + j] = val;
-	return EXIT_SUCCESS;
 }
 
-int matrix_get_el(matrix_t *M, int i, int j, double *result) {
-	if (_matrix_is_ptr_null(M) || !_matrix_are_coordinates_correct(M, i, j) || result == NULL) {
-		return EXIT_FAILURE;
-	}
-	*result = M->array[M->cols * i + j];
-	return EXIT_SUCCESS;
+double matrix_get_el(matrix_t *M, int i, int j) {
+	return M->array[M->cols * i + j];
 }
 
-int matrix_get_rows(matrix_t *M, int *result) {
-	if (_matrix_is_ptr_null(M) || result == NULL) {
-		return EXIT_FAILURE;
-	}
-	*result = M->rows;
-	return EXIT_SUCCESS;
+int matrix_get_rows(matrix_t *M) {
+	return M->rows;
 }
 
-int matrix_get_cols(matrix_t *M, int *result) {
-	if (_matrix_is_ptr_null(M) || result == NULL) {
-		return EXIT_FAILURE;
+int matrix_get_cols(matrix_t *M) {
+	return M->cols;
+}
+
+double **matrix_get_array(matrix_t *M) {
+	if (_matrix_is_ptr_null(M)) {
+		return NULL;
 	}
-	*result = M->cols;
-	return EXIT_SUCCESS;
+
+	double **result = (double **)calloc(M->rows, sizeof(double *));
+	if (result == NULL) {
+		return NULL;
+	}
+
+	for (int i = 0; i < M->rows; i++) {
+		result[i] = (double *)calloc(M->cols, sizeof(double));
+		if (result[i] == NULL) {
+			return NULL;
+		}
+
+		for (int j = 0; j < M->cols; j++) {
+			result[i][j] = matrix_get_el(M, i, j);
+		}
+	}
+
+	return result;
 }
 
 // ------------------
@@ -201,9 +207,7 @@ matrix_t *matrix_transpose(matrix_t *A) {
 
 	for (int i = 0; i < A->rows; i++) {
 		for (int j = 0; j < A->cols; j++) {
-			double val = 0;
-			matrix_get_el(A, i, j, &val);
-			matrix_set_el(result, val, j, i);
+			matrix_set_el(result, matrix_get_el(A, i, j), j, i);
 		}
 	}
 
@@ -283,9 +287,7 @@ int matrix_determinant(matrix_t *A, double *result) {
 					continue;
 				}
 
-				double val = 0;
-				matrix_get_el(A, i, j, &val);
-				matrix_set_el(minor, val, minor_i, minor_j);
+				matrix_set_el(minor, matrix_get_el(A, i, j), minor_i, minor_j);
 				minor_j++;
 			}
 			minor_i++;
@@ -299,9 +301,7 @@ int matrix_determinant(matrix_t *A, double *result) {
 			return EXIT_FAILURE;
 		}
 
-		double element = 0;
-		matrix_get_el(A, 0, k, &element);
-		det += (k % 2 == 0 ? 1 : -1) * element * minor_det;
+		det += (k % 2 == 0 ? 1 : -1) * matrix_get_el(A, 0, k) * minor_det;
 	}
 
 	*result = det;
@@ -400,9 +400,7 @@ matrix_t *_matrix_get_submatrix(matrix_t *M, int del_row, int del_col) {
 				continue;
 			}
 
-			double val = 0;
-			matrix_get_el(M, i, j, &val);
-			matrix_set_el(result, val, res_i, res_j);
+			matrix_set_el(result, matrix_get_el(M, i, j), res_i, res_j);
 			res_j++;
 		}
 		res_i++;
